@@ -74,7 +74,7 @@ Or (2):
 	}
 
 
-Example :
+Example default options:
 
 	// or default option
 	for i, char := range chars {
