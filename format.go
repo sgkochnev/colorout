@@ -180,7 +180,7 @@ func (f *format) Printf(format string, a ...interface{}) (n int, err error) {
 
 }
 
-func (f *format) Format(format string) (n int, err error) {
+func (f *format) PrepareFormat(format string) (n int, err error) {
 	if n, err = f.writeString(format); err != nil {
 		return
 	}
