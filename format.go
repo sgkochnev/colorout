@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/mattn/go-colorable"
@@ -22,26 +23,35 @@ func Reset() string {
 }
 
 func unset(w io.Writer) {
-	if _, err := fmt.Fprint(w, Reset()); err != nil {
-		panic("cannot write control sequence in output")
+	if _, err := w.Write(controlSequence(style.Reset)); err != nil {
+		fmt.Printf("cannot write control sequence in output: %v", err)
 	}
 }
 
 func sequence(a ...uint8) string {
 	seq := make([]string, 0, len(a))
 	for _, v := range a {
-		seq = append(seq, fmt.Sprintf("%v", v))
+		seq = append(seq, strconv.Itoa(int(v)))
 	}
 	return strings.Join(seq, ";")
 }
 
-func ControlSequence(a ...uint8) string {
-	return fmt.Sprintf("%s[%sm", escape, sequence(a...))
+func controlSequence(a ...uint8) []byte {
+	buf := bytes.Buffer{}
+	buf.WriteString(escape + "[" + sequence(a...) + "m")
+	return buf.Bytes()
 }
 
+func ControlSequence(a ...uint8) string {
+	return string(controlSequence(a...))
+}
+
+var (
+	reR = regexp.MustCompile(`%[ ]{0,2}%`)
+	reF = regexp.MustCompile(`%[ +\-#]?[ +\-#\d]?[.]?[\d]*[bcdefgopqstvwxEFGOTUX]{1}`)
+)
+
 func countArgs(str string) int {
-	reR := regexp.MustCompile(`%[ ]{0,2}%`)
-	reF := regexp.MustCompile(`%[ +\-#]?[ +\-#\d]?[.]?[\d]*[bcdefgopqstvwxEFGOTUX]{1}`)
 	return len(reF.FindAllStringSubmatch(
 		reR.ReplaceAllString(str, ""), -1),
 	)
@@ -81,7 +91,7 @@ func (f *format) bufIsEmpty() bool {
 
 func (f *format) set(w io.Writer) (n int, err error) {
 	if !f.paramsIsEmpty() {
-		return fmt.Fprint(w, ControlSequence(f.params.Bytes()...))
+		return w.Write(controlSequence(f.params.Bytes()...))
 	}
 	return
 }
