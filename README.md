@@ -2,32 +2,32 @@
 
 Usage example:
 
-import (
-    "github.com/sgkochnev/colorout"
-	"github.com/sgkochnev/colorout/color/bg"
-	"github.com/sgkochnev/colorout/color/fg"
-	"github.com/sgkochnev/colorout/style"
-)
+	import (
+    	"github.com/sgkochnev/colorout"
+		"github.com/sgkochnev/colorout/color/bg"
+		"github.com/sgkochnev/colorout/color/fg"
+		"github.com/sgkochnev/colorout/style"
+	)
 
-type character struct {
+	type character struct {
 		name string
 		age  uint8
 	}
 
-var chars = []character{
-	{
-		name: "Heihachi",
-		age:  75,
-	},
-	{
-		name: "Kazuya",
-		age:  49,
-	},
-	{
-		name: "Jin",
-		age:  21,
-	},
-}
+	var chars = []character{
+		{
+			name: "Heihachi",
+			age:  75,
+		},
+		{
+			name: "Kazuya",
+			age:  49,
+		},
+		{
+			name: "Jin",
+			age:  21,
+		},
+	}
 
 You can use the lib like this (1):
 
